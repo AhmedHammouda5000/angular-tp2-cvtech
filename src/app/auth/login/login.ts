@@ -9,6 +9,7 @@ import {
   required,
 } from '@angular/forms/signals';
 import { ToastService } from '../../services/toast.service';
+import { blacklistEmail } from '../../validators/blacklist-email.validator';
 
 interface Credentials {
   email: string;
@@ -32,6 +33,7 @@ export class Login {
     (f) => {
       required(f.email, { message: "L'email est obligatoire" });
       email(f.email, { message: "Le format de l'email est invalide" });
+      blacklistEmail(f.email); // custom validator
       required(f.password, { message: 'Le mot de passe est obligatoire' });
       minLength(f.password, 4, {
         message: (password) =>
