@@ -1,24 +1,44 @@
-import { Service, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Cv } from '../model/cv';
+import { API } from '../config/api';
 
 // @Service() (Angular 22) = @Injectable({ providedIn: 'root' })
 @Service()
 export class CvService {
-  // Fake data (will be replaced by the API in slide 4)
-  private readonly cvs = signal<Cv[]>([
+  private readonly http = inject(HttpClient);
+
+  // Fake data: shown when the API is unreachable
+  private readonly fakeCvList = signal<Cv[]>([
     { id: 1, name: 'Sellaouti', firstname: 'Aymen', age: 40, cin: 12345678, job: 'Teacher', path: '' },
     { id: 2, name: 'Ben Salah', firstname: 'Hassen', age: 25, cin: 87654321, job: 'Developer', path: '' },
     { id: 3, name: 'Maamouri', firstname: 'Aziz', age: 22, cin: 11223344, job: 'Student', path: '   ' },
   ]);
 
-  /** Read-only list: only this service can modify it */
-  readonly allCvs = this.cvs.asReadonly();
-
-  findById(id: number): Cv | undefined {
-    return this.cvs().find((cv) => cv.id === id);
+  // ----- API -----
+  getCvs(): Observable<Cv[]> {
+    return this.http.get<Cv[]>(API.cvs);
   }
 
-  deleteCv(cv: Cv): void {
-    this.cvs.update((cvs) => cvs.filter((c) => c.id !== cv.id));
+  getCvById(id: number): Observable<Cv> {
+    return this.http.get<Cv>(API.cvs + id);
+  }
+
+  deleteCv(id: number): Observable<unknown> {
+    return this.http.delete(API.cvs + id);
+  }
+
+  // ----- Fake CVs (fallback) -----
+  getFakeCvs(): Cv[] {
+    return this.fakeCvList();
+  }
+
+  getFakeCvById(id: number): Cv | null {
+    return this.fakeCvList().find((cv) => cv.id === id) ?? null;
+  }
+
+  deleteFakeCv(id: number): void {
+    this.fakeCvList.update((cvs) => cvs.filter((c) => c.id !== id));
   }
 }

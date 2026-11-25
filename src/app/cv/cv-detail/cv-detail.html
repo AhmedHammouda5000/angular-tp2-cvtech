@@ -1,4 +1,6 @@
-@if (cv(); as cv) {
+@if (cv.isLoading()) {
+  <div class="alert alert-info">Chargement...</div>
+} @else if (cv.value(); as cv) {
   <div class="card mx-auto" style="max-width: 24rem">
     <img [src]="cv.path | defaultImage" [alt]="cv.firstname" class="card-img-top p-4" />
     <div class="card-body">
@@ -10,7 +12,7 @@
       </ul>
       <div class="d-flex justify-content-between">
         <a routerLink="/cv" class="btn btn-secondary">Retour</a>
-        <button type="button" class="btn btn-danger" (click)="deleteCv()">Delete</button>
+        <button type="button" class="btn btn-danger" (click)="deleteCv(cv)">Delete</button>
       </div>
     </div>
   </div>

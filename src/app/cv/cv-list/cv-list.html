@@ -1,9 +1,13 @@
 <h2 class="mb-3">Liste des CVs</h2>
 
-<ul class="list-group">
-  @for (cv of cvs(); track cv.id) {
-    <app-cv-item [cv]="cv" />
-  } @empty {
-    <li class="list-group-item list-group-item-warning">Aucun CV pour le moment.</li>
-  }
-</ul>
+@if (cvs.isLoading()) {
+  <div class="alert alert-info">Chargement...</div>
+} @else {
+  <ul class="list-group">
+    @for (cv of cvs.value(); track cv.id) {
+      <app-cv-item [cv]="cv" />
+    } @empty {
+      <li class="list-group-item list-group-item-warning">Aucun CV pour le moment.</li>
+    }
+  </ul>
+}
