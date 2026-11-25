@@ -38,8 +38,16 @@
       }
 
       <!-- Binding on the disabled property: clickable only when the form is valid -->
-      <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm().invalid()">
-        Envoyer
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="loginForm().invalid() || loginForm().submitting()"
+      >
+        @if (loginForm().submitting()) {
+          Connexion...
+        } @else {
+          Envoyer
+        }
       </button>
     </form>
   </div>

@@ -1,4 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import {
   email,
   FieldTree,
@@ -9,12 +12,8 @@ import {
   required,
 } from '@angular/forms/signals';
 import { ToastService } from '../../services/toast.service';
+import { AuthService, Credentials } from '../../services/auth.service';
 import { blacklistEmail } from '../../validators/blacklist-email.validator';
-
-interface Credentials {
-  email: string;
-  password: string;
-}
 
 @Component({
   selector: 'app-login',
@@ -23,6 +22,8 @@ interface Credentials {
 })
 export class Login {
   private readonly toast = inject(ToastService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   // 1. The signal holds the VALUE of the form
   private readonly credentials = signal<Credentials>({ email: '', password: '' });
@@ -44,7 +45,16 @@ export class Login {
       // Called by [formRoot] on submit, only if the form is valid
       submission: {
         action: async () => {
-          this.toast.success(`Formulaire valide : ${this.credentials().email}`);
+          try {
+            await firstValueFrom(this.authService.login(this.credentials()));
+            this.toast.success(`Bienvenue ${this.credentials().email} !`);
+            this.router.navigate(['cv']);
+          } catch (err) {
+            const status = (err as HttpErrorResponse).status;
+            this.toast.error(
+              status === 401 ? 'Email ou mot de passe incorrect.' : 'Connexion impossible au serveur.',
+            );
+          }
           return undefined;
         },
       },

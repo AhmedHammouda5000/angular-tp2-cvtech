@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
   <div class="container">
     <a class="navbar-brand" routerLink="/">CvTech</a>
-    <ul class="navbar-nav">
-      @for (link of links; track link.path) {
+    <ul class="navbar-nav me-auto">
+      @for (link of links(); track link.path) {
         <li class="nav-item">
           <a
             class="nav-link"
@@ -15,5 +15,9 @@
         </li>
       }
     </ul>
+    @if (authService.isAuthenticated()) {
+      <span class="navbar-text me-3 d-none d-md-inline">{{ authService.email() }}</span>
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+    }
   </div>
 </nav>

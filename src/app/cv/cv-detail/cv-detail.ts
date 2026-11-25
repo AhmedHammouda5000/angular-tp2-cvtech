@@ -46,6 +46,8 @@ export class CvDetail {
           this.cvService.deleteFakeCv(cv.id);
           this.toast.success(`CV de test ${cv.firstname} ${cv.name} supprimé.`);
           this.router.navigate(['cv']);
+        } else if (err.status === 401) {
+          this.toast.error('Vous devez être connecté pour supprimer un CV.');
         } else {
           this.toast.error(`La suppression a échoué (${err.status}).`);
         }
