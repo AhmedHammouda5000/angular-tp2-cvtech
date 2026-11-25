@@ -1,5 +1,5 @@
 import { inject, Service, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cv } from '../model/cv';
 import { API } from '../config/api';
@@ -25,15 +25,9 @@ export class CvService {
     return this.http.get<Cv>(API.cvs + id);
   }
 
-  /** Needs authentication: the token is sent in the Authorization header */
+  /** Needs authentication: the token is added by authInterceptor */
   deleteCv(id: number): Observable<unknown> {
-    const token = localStorage.getItem('token') ?? '';
-    // HttpHeaders is immutable: set() returns a NEW object
-    const headers = new HttpHeaders().set('Authorization', token);
-    // Alternative with HttpParams (?access_token=...):
-    // const params = new HttpParams().set('access_token', token);
-    // return this.http.delete(API.cvs + id, { params });
-    return this.http.delete(API.cvs + id, { headers });
+    return this.http.delete(API.cvs + id);
   }
 
   // ----- Fake CVs (fallback) -----
