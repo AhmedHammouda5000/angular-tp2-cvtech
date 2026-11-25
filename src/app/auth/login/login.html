@@ -1,0 +1,23 @@
+<div class="card mx-auto" style="max-width: 28rem">
+  <div class="card-body">
+    <h2 class="card-title mb-4">Connexion</h2>
+
+    <form [formRoot]="loginForm" novalidate>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <!-- the red border (is-invalid) is added automatically, see app.config.ts -->
+        <input id="email" type="email" class="form-control" [formField]="loginForm.email" />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input id="password" type="password" class="form-control" [formField]="loginForm.password" />
+      </div>
+
+      <!-- Binding on the disabled property: clickable only when the form is valid -->
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm().invalid()">
+        Envoyer
+      </button>
+    </form>
+  </div>
+</div>

@@ -11,5 +11,6 @@ export class Header {
   protected readonly links = [
     { label: 'Accueil', path: '/', exact: true },
     { label: 'CVs', path: '/cv', exact: false },
+    { label: 'Login', path: '/login', exact: true },
   ];
 }
