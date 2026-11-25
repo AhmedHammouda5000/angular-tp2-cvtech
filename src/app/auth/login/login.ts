@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -25,6 +25,9 @@ export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  // ?returnUrl=... query param (set by authGuard), bound thanks to withComponentInputBinding()
+  readonly returnUrl = input<string>();
+
   // 1. The signal holds the VALUE of the form
   private readonly credentials = signal<Credentials>({ email: '', password: '' });
 
@@ -48,7 +51,8 @@ export class Login {
           try {
             await firstValueFrom(this.authService.login(this.credentials()));
             this.toast.success(`Bienvenue ${this.credentials().email} !`);
-            this.router.navigate(['cv']);
+            // Go back to the page the guard blocked, or to the CV list
+            this.router.navigateByUrl(this.returnUrl() ?? '/cv');
           } catch (err) {
             const status = (err as HttpErrorResponse).status;
             this.toast.error(
