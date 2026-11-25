@@ -1,0 +1,12 @@
+<img
+  [src]="cv().path | defaultImage"
+  [alt]="cv().firstname"
+  class="rounded-circle"
+  width="48"
+  height="48"
+/>
+<div class="flex-grow-1">
+  <strong>{{ cv().firstname }} {{ cv().name }}</strong>
+  <div class="text-muted small">{{ cv().job }}</div>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm" (click)="goToDetail()">Détails</button>

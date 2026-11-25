@@ -1,0 +1,21 @@
+@if (cv(); as cv) {
+  <div class="card mx-auto" style="max-width: 24rem">
+    <img [src]="cv.path | defaultImage" [alt]="cv.firstname" class="card-img-top p-4" />
+    <div class="card-body">
+      <h3 class="card-title">{{ cv.firstname }} {{ cv.name }}</h3>
+      <ul class="list-unstyled">
+        <li><strong>Job :</strong> {{ cv.job }}</li>
+        <li><strong>Âge :</strong> {{ cv.age }}</li>
+        <li><strong>CIN :</strong> {{ cv.cin }}</li>
+      </ul>
+      <div class="d-flex justify-content-between">
+        <a routerLink="/cv" class="btn btn-secondary">Retour</a>
+        <button type="button" class="btn btn-danger" (click)="deleteCv()">Delete</button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-warning">
+    Ce CV n'existe pas. <a routerLink="/cv" class="alert-link">Retour à la liste</a>
+  </div>
+}
