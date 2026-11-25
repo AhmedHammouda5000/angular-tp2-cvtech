@@ -7,12 +7,35 @@
         <label for="email" class="form-label">Email</label>
         <!-- the red border (is-invalid) is added automatically, see app.config.ts -->
         <input id="email" type="email" class="form-control" [formField]="loginForm.email" />
+        <!-- Error message: only after the user visited or modified the email field -->
+        @if (showErrors(loginForm.email)) {
+          @for (error of loginForm.email().errors(); track error.kind) {
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+          }
+        }
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input id="password" type="password" class="form-control" [formField]="loginForm.password" />
+        @if (showErrors(loginForm.password)) {
+          @for (error of loginForm.password().errors(); track error.kind) {
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+          }
+        }
       </div>
+
+      <!-- Error field: tells the user what is wrong with the form -->
+      @if (formTouched() && loginForm().invalid()) {
+        <div class="alert alert-danger py-2" role="alert">
+          <strong>Le formulaire contient {{ loginForm().errorSummary().length }} erreur(s) :</strong>
+          <ul class="mb-0">
+            @for (error of loginForm().errorSummary(); track $index) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        </div>
+      }
 
       <!-- Binding on the disabled property: clickable only when the form is valid -->
       <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm().invalid()">

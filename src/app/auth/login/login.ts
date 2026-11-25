@@ -1,5 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
+import { Component, computed, inject, signal } from '@angular/core';
+import {
+  email,
+  FieldTree,
+  form,
+  FormField,
+  FormRoot,
+  minLength,
+  required,
+} from '@angular/forms/signals';
 import { ToastService } from '../../services/toast.service';
 
 interface Credentials {
@@ -23,6 +31,7 @@ export class Login {
     this.credentials,
     (f) => {
       required(f.email, { message: "L'email est obligatoire" });
+      email(f.email, { message: "Le format de l'email est invalide" });
       required(f.password, { message: 'Le mot de passe est obligatoire' });
       minLength(f.password, 4, {
         message: (password) =>
@@ -38,5 +47,16 @@ export class Login {
         },
       },
     },
+  );
+
+  /** A field shows its errors only once the user visited (touched) or modified (dirty) it */
+  protected showErrors(field: FieldTree<string>): boolean {
+    const state = field();
+    return state.invalid() && (state.touched() || state.dirty());
+  }
+
+  /** At least one field was visited or modified */
+  protected readonly formTouched = computed(
+    () => this.loginForm().touched() || this.loginForm().dirty(),
   );
 }
